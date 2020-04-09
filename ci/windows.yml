@@ -16,7 +16,7 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)
-      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt $(QtVersion) windows desktop win_msvc2017 -m qtcore qtxml qtnetwork qtwebsockets
+      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt $(QtVersion) windows desktop win64_msvc2017_64 -m qtcore qtxml qtnetwork qtwebsockets
     displayName: 'Install Qt $(QtVersion)'
 
   - task: CMake
