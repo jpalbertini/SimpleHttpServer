@@ -1,4 +1,4 @@
- variables:
+variables:
     CMAKE_PREFIX_PATH : $(Build.BinariesDirectory)\\Qt
 
 steps:
