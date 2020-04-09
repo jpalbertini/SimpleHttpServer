@@ -1,5 +1,5 @@
 variables:
-    CMAKE_PREFIX_PATH : $(Build.BinariesDirectory)\\Qt
+  CMAKE_PREFIX_PATH : $(Build.BinariesDirectory)\\Qt
 
 steps:
   - checkout: self
