@@ -14,3 +14,13 @@ jobs:
     vmImage: $(imageName)
   steps:
     - template: ci/windows.yml
+    
+- job: Ubuntu
+  strategy:
+    matrix:
+      windows:
+        imageName: ubuntu-latest
+  pool:
+    vmImage: $(imageName)
+  steps:
+    - template: ci/linux.yml
