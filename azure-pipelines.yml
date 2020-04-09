@@ -1,6 +1,9 @@
 trigger:
 - master
 
+variables:
+  CMAKE_PREFIX_PATH : $(Build.BinariesDirectory)\\Qt
+
 jobs:
 - job: Windows
   strategy:
