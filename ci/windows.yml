@@ -17,5 +17,3 @@ steps:
     displayName: 'Install Qt $(QtVersion)'
 
   - task: CMake
-    variables:
-      CMAKE_PREFIX_PATH : $(Build.BinariesDirectory)\\Qt
