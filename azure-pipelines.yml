@@ -1,19 +1,18 @@
 trigger:
 - master
 
-variables:
-  CMAKE_PREFIX_PATH : $(Build.BinariesDirectory)/Qt
-
 strategy:
   matrix:
     linux:
       imageName: 'ubuntu-latest'
       qt_host: linux
       qt_version: ''
+      qt_cc: gcc
     windows:
       imageName: windows-2019
       qt_host: windows
       qt_version: win64_msvc2017_64
+      qt_cc: msvc2017_64
       
 pool:
   vmImage: $(imageName)
@@ -27,7 +26,7 @@ steps:
       targetType: 'inline'
       script: |
         gci env:* | sort-object name
-        
+
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.x'
@@ -44,4 +43,4 @@ steps:
 
   - task: CMake@1
     inputs:
-      cmakeArgs: '$(Build.SourcesDirectory)'
+      cmakeArgs: '$(Build.SourcesDirectory) -DCMAKE_PREFIX_PATH=$(Build.BinariesDirectory)/Qt/$(QtVersion)/$(qt_cc)'
