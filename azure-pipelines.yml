@@ -2,25 +2,39 @@ trigger:
 - master
 
 variables:
-  CMAKE_PREFIX_PATH : $(Build.BinariesDirectory)\\Qt
+  CMAKE_PREFIX_PATH : $(Build.BinariesDirectory)/Qt
 
-jobs:
-- job: Windows
-  strategy:
-    matrix:
-      windows:
-        imageName: windows-2019
-  pool:
-    vmImage: $(imageName)
-  steps:
-    - template: ci/windows.yml
-    
-- job: Ubuntu
-  strategy:
-    matrix:
-      windows:
-        imageName: ubuntu-latest
-  pool:
-    vmImage: $(imageName)
-  steps:
-    - template: ci/linux.yml
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-latest'
+      system: linux
+      qt_version: ''
+    windows:
+      imageName: windows-2019
+      system: windows
+      qt_version: win64_msvc2017_64
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+  - checkout: self
+    submodules: true
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m pip install aqtinstall
+    displayName: 'Install aqtinstall'
+
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m aqt install --outputdir $(Build.BinariesDirectory)/Qt $(QtVersion) $(system) desktop $(qt_version) -m qtcore qtxml qtnetwork qtwebsockets
+    displayName: 'Install Qt $(QtVersion) for $(system) $(qt_version)'
+
+  - task: CMake@1
+    cmakeArgs: '-S . -B build -GNinja'
