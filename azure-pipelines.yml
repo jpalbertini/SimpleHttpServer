@@ -7,7 +7,7 @@ strategy:
       imageName: 'ubuntu-latest'
       qt_host: linux
       qt_version: ''
-      qt_cc: gcc
+      qt_cc: gcc_64
     windows:
       imageName: windows-2019
       qt_host: windows
