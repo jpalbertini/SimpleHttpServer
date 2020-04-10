@@ -26,8 +26,8 @@ steps:
     inputs:
       targetType: 'inline'
       script: |
-        ls env:
-
+        gci env:* | sort-object name
+        
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.x'
