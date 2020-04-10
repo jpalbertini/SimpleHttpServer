@@ -37,4 +37,5 @@ steps:
     displayName: 'Install Qt $(QtVersion) for $(system) $(qt_version)'
 
   - task: CMake@1
-    cmakeArgs: '-S . -B build -GNinja'
+    inputs:
+      cmakeArgs: '-S . -B build -GNinja'
