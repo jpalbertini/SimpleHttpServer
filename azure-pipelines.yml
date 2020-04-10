@@ -8,11 +8,11 @@ strategy:
   matrix:
     linux:
       imageName: 'ubuntu-latest'
-      system: linux
+      qt_host: linux
       qt_version: ''
     windows:
       imageName: windows-2019
-      system: windows
+      qt_host: windows
       qt_version: win64_msvc2017_64
 
 pool:
@@ -33,8 +33,8 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)
-      python -m aqt install --outputdir $(Build.BinariesDirectory)/Qt $(QtVersion) $(system) desktop $(qt_version) -m qtcore qtxml qtnetwork qtwebsockets
-    displayName: 'Install Qt $(QtVersion) for $(system) $(qt_version)'
+      python -m aqt install --outputdir $(Build.BinariesDirectory)/Qt $(QtVersion) $(qt_host) desktop $(qt_version) -m qtcore qtxml qtnetwork qtwebsockets
+    displayName: 'Install Qt $(QtVersion) for $(qt_host) $(qt_version)'
 
   - task: CMake@1
     inputs:
