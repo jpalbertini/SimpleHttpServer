@@ -10,19 +10,23 @@ strategy:
       imageName: 'ubuntu-latest'
       qt_host: linux
       qt_version: ''
-      cmake_generator: ''
     windows:
       imageName: windows-2019
       qt_host: windows
       qt_version: win64_msvc2017_64
-      cmake_generator: ''
-
+      
 pool:
   vmImage: $(imageName)
 
 steps:
   - checkout: self
     submodules: true
+    
+  - task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      ls env:
 
   - task: UsePythonVersion@0
     inputs:
@@ -40,4 +44,4 @@ steps:
 
   - task: CMake@1
     inputs:
-      cmakeArgs: '$(cmake_generator) ..'
+      cmakeArgs: '$(Build.SourcesDirectory)'
