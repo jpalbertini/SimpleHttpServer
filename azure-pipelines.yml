@@ -38,4 +38,4 @@ steps:
 
   - task: CMake@1
     inputs:
-      cmakeArgs: '-S . -B build -GNinja'
+      cmakeArgs: '-GNinja ..'
