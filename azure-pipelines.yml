@@ -41,17 +41,18 @@ steps:
     displayName: 'Install Qt $(QtVersion) for $(qt_host) $(qt_version)'
 
   - task: CMake@1
+    displayName: 'Running CMake'
     inputs:
       cmakeArgs: '$(Build.SourcesDirectory) -DCMAKE_PREFIX_PATH=$(Build.BinariesDirectory)/Qt/$(QtVersion)/$(qt_cc)'
 
   - task: CMake@1
+    displayName: 'Building'
     inputs:
       cmakeArgs: '--build . -- $(cc_build_options)'
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: 'ctest'
+  - script: |
+      ctest
+    displayName: 'Running Tests'
 
   - task: PublishTestResults@2
     inputs:
