@@ -13,7 +13,7 @@ find_package(Qt5 COMPONENTS WebSockets REQUIRED)
 
 enable_testing()
 
-SET(gtest_force_shared_crt ON)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(3rdparties/googletest)
 
 file(GLOB_RECURSE INCLUDE_FILES include/QtHttpServer/*)
@@ -30,7 +30,7 @@ add_executable(QtHttpServerTests ${INCLUDE_FILES} ${SOURCE_FILES} ${TEST_FILES})
 target_include_directories(QtHttpServerTests PRIVATE include)
 target_link_libraries(QtHttpServerTests Qt5::Core gtest)
 target_compile_definitions(QtHttpServerTests PRIVATE BUILD_QTHTTPSERVER_TESTS)
-add_test(QtHttpServer_Tests QtHttpServerTests)
+add_test(QtHttpServer_Tests QtHttpServerTests --gtest_shuffle --gtest_output=xml:test_results.xml)
 
 file(GLOB_RECURSE SERVER_SOURCE_FILES server-src/*)
 add_executable(RunnableHttpServer ${SERVER_SOURCE_FILES})
