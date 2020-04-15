@@ -9,7 +9,8 @@
             "cmakeCommandArgs": "",
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
-            "variables": []
+            "variables": [],
+            "generator": "Visual Studio 16 2019 Win64"
         }
     ]
 }
