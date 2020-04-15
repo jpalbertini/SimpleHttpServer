@@ -1,0 +1,67 @@
+name: CI
+on: [push]  
+env:
+  QT_VERSION: 5.14.0
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        config:
+        - {
+            os: ubuntu-latest,
+            qt_host: linux,
+            qt_version: '',
+            qt_cc: gcc_64,
+            cc_build_options: '-j',
+          }
+        - {
+            os: windows-latest,
+            qt_host: windows,
+            qt_version: win64_msvc2017_64,
+            qt_cc: msvc2017_64,
+            cc_build_options: '-m',
+          }
+          
+    runs-on: ${{matrix.config.os}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      
+      - name: Set up Python3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+    
+      - name: Install aqtinstall
+        run: |
+          cd ${{github.workspace}}
+          python -m pip install aqtinstall
+            
+      - name: Install Qt ${{env.QT_VERSION}} for ${{matrix.config.qt_host}} ${{matrix.config.qt_version}}
+        run: |
+          cd ${{github.workspace}}
+          python -m aqt install --outputdir ${{github.workspace}}/Qt ${{env.QT_VERSION}} ${{matrix.config.qt_host}} desktop ${{matrix.config.qt_version}} -m qtcore qtxml qtnetwork qtwebsockets
+      
+      - name: Install CMake
+        uses: jwlawson/actions-setup-cmake@v1.1        
+      
+      - name: Create Build Directory
+        run: |
+          mkdir ${{github.workspace}}/build
+    
+      - name: Run CMake
+        run: |
+          cd ${{github.workspace}}/build
+          cmake .. -DCMAKE_PREFIX_PATH=${{github.workspace}}/Qt/${{env.QT_VERSION}}/${{matrix.config.qt_cc}}
+          
+      - name: Build
+        run: |
+          cd ${{github.workspace}}/build
+          cmake --build . -- ${{matrix.config.cc_build_options}}
+        
+      - name: Run Tests
+        run: |
+          cd ${{github.workspace}}/build
+          ctest
+        
