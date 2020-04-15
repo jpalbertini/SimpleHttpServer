@@ -53,10 +53,14 @@ steps:
     inputs:
       cmakeArgs: '--build . -- $(cc_build_options)'
 
-  - script: |
-      ctest
+  - task: PowerShell@2
     displayName: 'Running Tests'
-
+    inputs:
+      targetType: 'inline'
+      script: 'ctest'
+      pwsh: true
+      workingDirectory: '$(Build.SourcesDirectory)/build'
+    
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'JUnit'
