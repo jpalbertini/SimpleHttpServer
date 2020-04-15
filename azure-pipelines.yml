@@ -1,5 +1,5 @@
-trigger:
-- master
+variables:
+  QtVersion: 5.14.0
 
 strategy:
   matrix:
@@ -8,11 +8,13 @@ strategy:
       qt_host: linux
       qt_version: ''
       qt_cc: gcc_64
+      cc_build_options: '-j'
     windows:
       imageName: windows-2019
       qt_host: windows
       qt_version: win64_msvc2017_64
       qt_cc: msvc2017_64
+      cc_build_options: '-m'
       
 pool:
   vmImage: $(imageName)
@@ -42,5 +44,25 @@ steps:
     displayName: 'Install Qt $(QtVersion) for $(qt_host) $(qt_version)'
 
   - task: CMake@1
+    displayName: 'Running CMake'
     inputs:
       cmakeArgs: '$(Build.SourcesDirectory) -DCMAKE_PREFIX_PATH=$(Build.BinariesDirectory)/Qt/$(QtVersion)/$(qt_cc)'
+
+  - task: CMake@1
+    displayName: 'Building'
+    inputs:
+      cmakeArgs: '--build . -- $(cc_build_options)'
+
+  - task: PowerShell@2
+    displayName: 'Running Tests'
+    inputs:
+      targetType: 'inline'
+      script: 'ctest'
+      pwsh: true
+      workingDirectory: '$(Build.SourcesDirectory)/build'
+    
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/test_results.xml'
+      buildPlatform: '$(qt_host)'
