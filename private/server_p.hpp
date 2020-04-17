@@ -1,14 +1,15 @@
-#ifndef QTHTTPSERVER_SERVER_P
-#define QTHTTPSERVER_SERVER_P
+#ifndef SIMPLEHTTPSERVER_SERVER_P
+#define SIMPLEHTTPSERVER_SERVER_P
 
 #include <memory>
+
 #include <QTcpServer>
 #include <QThread>
 #include <QSslConfiguration>
 
-#include "QtHttpServer/defines.hpp"
+#include "SimpleHttpServer/types.hpp"
 
-namespace qhs
+namespace shs
 {
     struct ServerImpl
     {
@@ -16,7 +17,9 @@ namespace qhs
         QThread currentThread_;
         QSslConfiguration sslConfiguration_;
         int port_{ 0 };
+
+        GetFuntion getFuntion_;
     };
 }
 
-#endif //QTHTTPSERVER_SERVER_P
+#endif //SIMPLEHTTPSERVER_SERVER_P
