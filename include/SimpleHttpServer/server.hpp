@@ -1,15 +1,20 @@
-#ifndef QTHTTPSERVER_SERVER
-#define QTHTTPSERVER_SERVER
+#ifndef SIMPLEHTTPSERVER_SERVER
+#define SIMPLEHTTPSERVER_SERVER
 
 #include <memory>
+#include <functional>
+#include <optional>
 #include <QSslConfiguration>
 
-#include "QtHttpServer/defines.hpp"
+#include "SimpleHttpServer/defines.hpp"
+#include "SimpleHttpServer/types.hpp"
 
-namespace qhs
+class QAbstractSocket;
+class QueryInformations;
+namespace shs
 {
     struct ServerImpl;
-    class QTHTTPSERVER_EXPORT Server
+    class SIMPLEHTTPSERVER_EXPORT Server
     {
     public:
         Server();
@@ -19,10 +24,13 @@ namespace qhs
         bool start();
         bool stop();
 
+        void attachOnGet(GetFuntion getCallback);
+
     private:
         void onStarted();
         void onStopped();
         void onNewConnection();
+        void handleRequest(QAbstractSocket* device);
 
     private:
         QObject object_;
@@ -30,4 +38,4 @@ namespace qhs
     };
 }
 
-#endif //QTHTTPSERVER_SERVER
+#endif //SIMPLEHTTPSERVER_SERVER

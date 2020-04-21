@@ -3,7 +3,8 @@
 
 #include <signal.h>
 
-#include "QtHttpServer/server.hpp"
+#include "SimpleHttpServer/server.hpp"
+#include "SimpleHttpServer/queryinformations.hpp"
 
 
 void myInterruptHandler(int signum) {
@@ -15,8 +16,14 @@ int main(int argc, char* argv[])
     auto oldHandler = signal(SIGINT, myInterruptHandler);
     QCoreApplication a(argc, argv);
 
-    qhs::Server server;
+    shs::Server server;
     server.setBinding(80);
+    server.attachOnGet([](const shs::QueryInformations& query) -> shs::CallbackResponse {
+        if (query.request == "/")
+            return "<html><h1>Good</h1></html>";
+        return shs::CallbackResponse();
+    });
+
     qInfo() << "Starting";
     server.start();
     qInfo() << "Ready";
